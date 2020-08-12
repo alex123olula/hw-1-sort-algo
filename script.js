@@ -32,7 +32,6 @@ function getInputData() {
 function outputString() {
     const inputArray = getInputData(),
         length = inputArray.length;
-
     if (inputArray) {
         removeError();
         let sortedArr = quickSort(inputArray);
@@ -41,18 +40,37 @@ function outputString() {
     }
 }
 
-function quickSort(arr) {
-    if (arr.length < 2) return arr;
-
-    const pivot = arr[0],
-        left = [],
-        right = [];
-
-    for (let i = 1; i < arr.length; i++) {
-        pivot > arr[i] ? left.push(arr[i]) : right.push(arr[i]);
+function partition(items, left, right) {
+    let pivot = items[Math.floor((right + left) / 2)],
+        i = left,
+        j = right;
+    while (i <= j) {
+        while (items[i] < pivot) {
+            i++;
+        }
+        while (items[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
+            [items[i], items[j]] = [items[j], items[i]];
+            i++;
+            j--;
+        }
     }
+    return i;
+}
 
-    return [...quickSort(left), pivot, ...quickSort(right)];
+function quickSort(items, left = 0, right = items.length - 1) {
+    if (items.length > 1) {
+        const index = partition(items, left, right);
+        if (left < index - 1) {
+            quickSort(items, left, index - 1);
+        }
+        if (index < right) {
+            quickSort(items, index, right);
+        }
+    }
+    return items;
 }
 
 sortHandler.addEventListener('click', outputString);
